@@ -2,27 +2,14 @@
 
 .PHONY: dev
 dev: ## dev build
-dev: clean install generate vet fmt lint test mod-tidy
+dev: install vet fmt lint test mod-tidy
 
-.PHONY: ci
-ci: ## CI build
-ci: dev diff
-
-.PHONY: clean
-clean: ## remove files created during build pipeline
-	$(call print-target)
-	rm -rf dist
-	rm -f coverage.*
 
 .PHONY: install
 install: ## go install tools
 	$(call print-target)
 	cd tools && go install $(shell cd tools && go list -f '{{ join .Imports " " }}' -tags=tools)
 
-.PHONY: generate
-generate: ## go generate
-	$(call print-target)
-	go generate ./...
 
 .PHONY: vet
 vet: ## go vet
@@ -40,10 +27,9 @@ lint: ## golangci-lint
 	golangci-lint run
 
 .PHONY: test
-test: ## go test with race detector and code covarage
+test: 
 	$(call print-target)
-	go test -race -covermode=atomic -coverprofile=coverage.out ./...
-	go tool cover -html=coverage.out -o coverage.html
+	go test ./...
 
 .PHONY: mod-tidy
 mod-tidy: ## go mod tidy
@@ -56,18 +42,6 @@ diff: ## git diff
 	$(call print-target)
 	git diff --exit-code
 	RES=$$(git status --porcelain) ; if [ -n "$$RES" ]; then echo $$RES && exit 1 ; fi
-
-.PHONY: build
-build: ## goreleaser --snapshot --skip-publish --rm-dist
-build: install
-	$(call print-target)
-	goreleaser --snapshot --skip-publish --rm-dist
-
-.PHONY: release
-release: ## goreleaser --rm-dist
-release: install
-	$(call print-target)
-	goreleaser --rm-dist
 
 .PHONY: run
 run: ## go run

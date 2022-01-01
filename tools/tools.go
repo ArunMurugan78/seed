@@ -1,3 +1,4 @@
+//go:build tools
 // +build tools
 
 package tools
@@ -8,5 +9,4 @@ package tools
 // https://github.com/golang/go/issues/25922
 import (
 	_ "github.com/golangci/golangci-lint/cmd/golangci-lint"
-	_ "github.com/goreleaser/goreleaser"
 )

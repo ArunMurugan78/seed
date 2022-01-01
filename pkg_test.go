@@ -1,4 +1,4 @@
-package main
+package pkg
 
 import (
 	"testing"
@@ -7,7 +7,7 @@ import (
 )
 
 func Test_greet(t *testing.T) {
-	got := greet()
+	got := Greet()
 
 	assert.Equal(t, "Hi!", got, "should properly greet")
 }
